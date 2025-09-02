@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clickable Pictures</title>
+  <style>
+    body {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 60px;
+      padding: 40px;
+      background-color: #ffffff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    img, .white-box {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      cursor: pointer;
+      border-radius: 15px;
+      transition: transform 0.3s, opacity 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      color: #000;
+    }
+    img:hover, .white-box:hover {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+    .white-box {
+      background-color: #ffffff;
+      border: none;
+    }
+    a {
+      text-decoration: none;
+    }
+    .title {
+      margin-bottom: 15px;
+      font-size: 26px;
+      font-weight: bold;
+      color: #000;
+    }
+
+    /* Modal background */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .modal-bg.show {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed; 
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      width: 400px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 28px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 101;
+    }
+    .modal.show {
+      opacity: 1;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 30px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .close:hover {
+      color: #000;
+    }
+
+    /* Fade to black overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      color: #fff;
+      font-size: 32px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2s ease; /* fade duration = 2s */
+      z-index: 200;
+    }
+    .overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="title">BULLY - CON V3</div>
+    <a href="https://prodbycon.bandcamp.com/album/bully-con-v3" class="link" data-href="https://prodbycon.bandcamp.com/album/bully-con-v3">
+      <img src="images/photo1.jpg" alt="Photo 1">
+    </a>
+  </div>
+
+  <div class="container">
+    <div class="title">WAR - CON</div>
+    <a href="https://prodbycon.bandcamp.com/album/war-con-scrapped-album-unfinished-songs" class="link" data-href="https://prodbycon.bandcamp.com/album/war-con-scrapped-album-unfinished-songs">
+      <div class="white-box">WAR - CON</div>
+    </a>
+  </div>
+
+  <div class="container">
+    <div class="title">VULTURES 3 - CON</div>
+    <img src="images/photo3.jpg" alt="Photo 3" onclick="showModal()">
+  </div>
+
+  <!-- Modal background -->
+  <div id="modalBg" class="modal-bg"></div>
+
+  <!-- Modal -->
+  <div id="myModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    NOT DONE YET
+  </div>
+
+  <!-- Fade to black overlay -->
+  <div id="overlay" class="overlay">loading link...</div>
+
+  <script>
+    // Modal functions
+    function showModal() {
+      const modalBg = document.getElementById('modalBg');
+      modalBg.classList.add('show');
+      const modal = document.getElementById('myModal');
+      modal.classList.add('show');
+    }
+    function closeModal() {
+      const modalBg = document.getElementById('modalBg');
+      modalBg.classList.remove('show');
+      const modal = document.getElementById('myModal');
+      modal.classList.remove('show');
+    }
+
+    // Clicking outside modal closes it
+    window.onclick = function(event) {
+      const modalBg = document.getElementById('modalBg');
+      if (event.target == modalBg) {
+        closeModal();
+      }
+    }
+
+    // Fade to black when clicking links
+    const links = document.querySelectorAll('.link');
+    links.forEach(link => {
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        const overlay = document.getElementById('overlay');
+        overlay.classList.add('show');
+        // wait until fade-in finishes (2s), then open link
+        overlay.addEventListener('transitionend', function handler() {
+          window.location.href = link.dataset.href;
+          overlay.removeEventListener('transitionend', handler);
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
